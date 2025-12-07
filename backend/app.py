@@ -28,7 +28,7 @@ from gemini_suggester import (
 )
 from auth import (
     authenticate_user, generate_token, verify_token,
-    token_required, admin_required
+    token_required, admin_required, register_user
 )
 
 
@@ -449,6 +449,41 @@ def login():
         'user': user,
         'message': 'Login successful'
     })
+
+
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """Register a new user."""
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'error': 'Missing request body'}), 400
+    
+    username = data.get('username')
+    password = data.get('password')
+    name = data.get('name')
+    email = data.get('email')
+    role = data.get('role', 'shopkeeper')
+    
+    if not username or not password or not name or not email:
+        return jsonify({'error': 'All fields are required'}), 400
+    
+    if len(password) < 6:
+        return jsonify({'error': 'Password must be at least 6 characters'}), 400
+    
+    result = register_user(username, password, name, email, role)
+    
+    if 'error' in result:
+        return jsonify(result), 400
+    
+    return jsonify({
+        'message': 'Registration successful',
+        'user': {
+            'username': result['username'],
+            'name': result['name'],
+            'role': result['role']
+        }
+    }), 201
 
 
 @app.route('/api/auth/verify', methods=['GET'])

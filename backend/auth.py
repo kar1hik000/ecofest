@@ -102,6 +102,65 @@ def authenticate_user(username, password):
     return None
 
 
+def register_user(username, password, name, email, role='shopkeeper'):
+    """Register a new user - tries Supabase first, then fallback to demo users."""
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    
+    # Validate role
+    valid_roles = ['shopkeeper', 'municipality', 'Shopkeeper', 'Municipality']
+    if role not in valid_roles:
+        role = 'Shopkeeper'
+    
+    # Capitalize role for consistency
+    role = role.capitalize()
+    
+    # Try Supabase registration
+    if USE_SUPABASE:
+        try:
+            # Check if username already exists
+            existing = supabase.table('users').select('username').eq('username', username).execute()
+            if existing.data and len(existing.data) > 0:
+                return {'error': 'Username already exists'}
+            
+            # Create new user
+            response = supabase.table('users').insert({
+                'username': username,
+                'password_hash': password_hash,
+                'name': name,
+                'email': email,
+                'role': role
+            }).execute()
+            
+            if response.data:
+                return {
+                    'success': True,
+                    'username': username,
+                    'name': name,
+                    'role': role
+                }
+        except Exception as e:
+            print(f"Supabase registration error: {e}")
+            # Fall through to demo user creation
+    
+    # Fallback: Add to demo users (in-memory only)
+    if username in DEMO_USERS:
+        return {'error': 'Username already exists'}
+    
+    DEMO_USERS[username] = {
+        'password_hash': password_hash,
+        'role': role,
+        'name': name,
+        'email': email
+    }
+    
+    return {
+        'success': True,
+        'username': username,
+        'name': name,
+        'role': role
+    }
+
+
 def token_required(f):
     """Decorator to protect routes with JWT authentication."""
     @wraps(f)

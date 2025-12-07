@@ -2055,6 +2055,91 @@ textarea:focus {
     animation: spin 1s linear infinite;
 }
 
+/* Login Divider */
+.login-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--spacing-md) 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.login-divider span {
+    padding: 0 12px;
+}
+
+/* Google Sign-in Button */
+.google-signin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 24px;
+    background: #ffffff;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+}
+
+.google-signin-btn:hover {
+    background: #f8f9fa;
+    border-color: #d2e3fc;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.15);
+}
+
+/* Login Links */
+.login-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: var(--spacing-md);
+}
+
+.forgot-password-link,
+.register-link {
+    background: none;
+    border: none;
+    color: var(--green-forest);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color var(--transition-fast);
+}
+
+.forgot-password-link:hover,
+.register-link:hover {
+    color: var(--green-dark);
+    text-decoration: underline;
+}
+
+.link-divider {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+/* Register Modal */
+.register-modal {
+    max-width: 420px;
+}
+
+.register-modal .form-group {
+    margin-bottom: var(--spacing-sm);
+}
+
 .login-demo-accounts {
     margin-top: var(--spacing-xl);
     padding-top: var(--spacing-lg);
