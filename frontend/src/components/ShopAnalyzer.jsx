@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function ShopAnalyzer({ festival }) {
     const [shops, setShops] = useState([])
     const [selectedShop, setSelectedShop] = useState(null)
@@ -16,7 +19,7 @@ function ShopAnalyzer({ festival }) {
 
     const fetchShops = async () => {
         try {
-            const response = await fetch('/api/shops')
+            const response = await fetch(`${API_BASE_URL}/api/shops`)
             const data = await response.json()
             setShops(data.shops || [])
         } catch (error) {
@@ -35,7 +38,7 @@ function ShopAnalyzer({ festival }) {
         setMarketing(null)
 
         try {
-            const response = await fetch(`/api/shops/${shopId}?festival=${festival}`)
+            const response = await fetch(`${API_BASE_URL}/api/shops/${shopId}?festival=${festival}`)
             const data = await response.json()
             setShopData(data)
         } catch (error) {
@@ -62,7 +65,7 @@ function ShopAnalyzer({ festival }) {
         setLoadingSuggestions(true)
 
         try {
-            const response = await fetch(`/api/shops/${selectedShop}/suggestions?festival=${festival}`)
+            const response = await fetch(`${API_BASE_URL}/api/shops/${selectedShop}/suggestions?festival=${festival}`)
             const data = await response.json()
             setSuggestions(data)
         } catch (error) {
@@ -93,7 +96,7 @@ function ShopAnalyzer({ festival }) {
         if (!selectedShop) return
 
         try {
-            const response = await fetch(`/api/shops/${selectedShop}/marketing?festival=${festival}`)
+            const response = await fetch(`${API_BASE_URL}/api/shops/${selectedShop}/marketing?festival=${festival}`)
             const data = await response.json()
             setMarketing(data)
         } catch (error) {
