@@ -60,6 +60,16 @@ print(f"Loaded {len(SALES_DF)} sales records, {len(AREA_DF)} area-festival recor
 
 # ==================== BASIC ENDPOINTS ====================
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint for health checks."""
+    return jsonify({
+        'name': 'EcoFest API',
+        'status': 'running',
+        'version': '1.0.0'
+    })
+
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint."""
