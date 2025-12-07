@@ -24,7 +24,7 @@ from hotspot_analyzer import (
 )
 from gemini_suggester import (
     generate_eco_suggestions, generate_marketing_message,
-    generate_municipality_insights
+    generate_municipality_insights, ai_chat, generate_prediction_summary
 )
 from auth import (
     authenticate_user, generate_token, verify_token,
@@ -469,6 +469,41 @@ def get_current_user():
         'username': request.current_user.get('username'),
         'role': request.current_user.get('role'),
         'name': request.current_user.get('name')
+    })
+
+
+# ==================== AI ENDPOINTS ====================
+
+@app.route('/api/ai/chat', methods=['POST'])
+def ai_chat_endpoint():
+    """AI chat assistant endpoint."""
+    data = request.get_json()
+    message = data.get('message', '')
+    context = data.get('context', {})
+    
+    if not message:
+        return jsonify({'error': 'Message is required'}), 400
+    
+    result = ai_chat(message, context)
+    return jsonify(result)
+
+
+@app.route('/api/ai/summary/<festival>', methods=['GET'])
+def ai_prediction_summary(festival):
+    """Get AI-generated prediction summary for a festival."""
+    # Get festival statistics
+    summary = get_festival_summary(AREA_DF, SALES_DF, festival)
+    
+    if not summary:
+        return jsonify({'error': 'Festival not found'}), 404
+    
+    # Generate AI summary
+    result = generate_prediction_summary(festival, summary)
+    return jsonify({
+        'festival': festival,
+        'stats': summary,
+        'ai_summary': result.get('summary'),
+        'success': result.get('success', False)
     })
 
 

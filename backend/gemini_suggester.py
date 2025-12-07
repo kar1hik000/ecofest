@@ -206,3 +206,95 @@ Be practical and specific to Indian municipal operations."""
             
     except Exception as e:
         return {'error': str(e), 'insights': None}
+
+
+def ai_chat(message, context=None):
+    """
+    AI chat assistant for waste management and eco-friendly advice.
+    
+    Args:
+        message: User's question or message
+        context: Optional context about user role, festival, etc.
+    
+    Returns:
+        dict: AI response
+    """
+    if not api_key:
+        return {
+            'error': 'GOOGLE_API_KEY not configured',
+            'response': 'I apologize, but AI features are currently unavailable.'
+        }
+    
+    context_text = ""
+    if context:
+        if context.get('festival'):
+            context_text += f"\nCurrent festival context: {context['festival']}"
+        if context.get('role'):
+            context_text += f"\nUser role: {context['role']}"
+        if context.get('area'):
+            context_text += f"\nArea of interest: {context['area']}"
+    
+    prompt = f"""You are EcoBot, an AI assistant for EcoFest - a festival waste prediction and management platform for Indian cities.
+
+Your expertise includes:
+- Festival waste management in India
+- Eco-friendly product alternatives for festivals (Diwali, Holi, Ganesh Chaturthi, etc.)
+- Waste reduction tips for shopkeepers
+- Municipal waste management planning
+- Sustainable celebration practices
+{context_text}
+
+User message: {message}
+
+Respond helpfully and concisely. If discussing products, mention Indian alternatives. 
+Keep responses under 150 words unless the question requires detailed explanation.
+Be friendly and use occasional emojis. Focus on actionable advice."""
+
+    try:
+        model = get_model()
+        response = model.generate_content(prompt)
+        return {'response': response.text, 'success': True}
+    except Exception as e:
+        return {'error': str(e), 'response': 'Sorry, I encountered an error. Please try again.'}
+
+
+def generate_prediction_summary(festival, stats):
+    """
+    Generate natural language summary of waste predictions.
+    
+    Args:
+        festival: Festival name
+        stats: Dictionary with prediction statistics
+    
+    Returns:
+        dict: AI-generated summary in natural language
+    """
+    if not api_key:
+        return {
+            'error': 'GOOGLE_API_KEY not configured',
+            'summary': None
+        }
+    
+    prompt = f"""Generate a brief, engaging summary of these waste prediction statistics for {festival}:
+
+Statistics:
+- Total areas monitored: {stats.get('total_areas', 'N/A')}
+- Critical hotspots: {stats.get('critical_areas', 'N/A')}
+- Expected waste increase: {stats.get('average_increase_percent', 'N/A')}%
+- Additional trucks needed: {stats.get('total_extra_trucks_needed', 'N/A')}
+- Additional workers needed: {stats.get('total_extra_workers_needed', 'N/A')}
+
+Write a 2-3 sentence summary that:
+1. Highlights the key concern for this festival
+2. Mentions the resource requirements
+3. Ends with an actionable recommendation
+
+Be concise and use a professional but accessible tone. Include one relevant emoji."""
+
+    try:
+        model = get_model()
+        response = model.generate_content(prompt)
+        return {'summary': response.text.strip(), 'success': True}
+    except Exception as e:
+        return {'error': str(e), 'summary': None}
+

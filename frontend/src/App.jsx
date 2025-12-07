@@ -6,6 +6,7 @@ import WasteTrends from './components/WasteTrends'
 import FestivalComparison from './components/FestivalComparison'
 import EcoLeaderboard from './components/EcoLeaderboard'
 import Login from './components/Login'
+import AIChatWidget from './components/AIChatWidget'
 
 // API Base URL - uses env variable in production, empty string for local dev proxy
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
@@ -272,6 +273,9 @@ function App() {
                     <span>Powered by AI for Sustainable Celebrations</span>
                 </div>
             </footer>
+
+            {/* AI Chat Widget */}
+            <AIChatWidget festival={selectedFestival} userRole={user?.role} />
         </div>
     )
 }
