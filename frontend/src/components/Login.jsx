@@ -1,5 +1,8 @@
 import { useState } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function Login({ onLogin }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -15,7 +18,7 @@ function Login({ onLogin }) {
         setLoading(true)
 
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

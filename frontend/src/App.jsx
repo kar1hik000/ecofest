@@ -7,6 +7,9 @@ import FestivalComparison from './components/FestivalComparison'
 import EcoLeaderboard from './components/EcoLeaderboard'
 import Login from './components/Login'
 
+// API Base URL - uses env variable in production, empty string for local dev proxy
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function App() {
     const [activeTab, setActiveTab] = useState('dashboard')
     const [selectedFestival, setSelectedFestival] = useState('Diwali')
@@ -44,7 +47,7 @@ function App() {
         if (token && storedUser) {
             try {
                 // Verify token is still valid
-                const response = await fetch('/api/auth/verify', {
+                const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -82,7 +85,7 @@ function App() {
 
     const fetchFestivals = async () => {
         try {
-            const response = await fetch('/api/festivals')
+            const response = await fetch(`${API_BASE_URL}/api/festivals`)
             const data = await response.json()
             setFestivals(data.festivals || [])
             setLoading(false)
