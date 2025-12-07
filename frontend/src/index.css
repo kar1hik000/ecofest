@@ -2076,28 +2076,17 @@ textarea:focus {
     padding: 0 12px;
 }
 
-/* Google Sign-in Button */
-.google-signin-btn {
+/* Google Sign-in Button Container */
+.google-btn-container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 12px;
     width: 100%;
-    padding: 12px 24px;
-    background: #ffffff;
-    color: #3c4043;
-    border: 1px solid #dadce0;
-    border-radius: var(--radius-md);
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--transition-normal);
 }
 
-.google-signin-btn:hover {
-    background: #f8f9fa;
-    border-color: #d2e3fc;
-    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.15);
+#google-signin-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 /* Login Links */

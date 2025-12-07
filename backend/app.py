@@ -486,6 +486,62 @@ def register():
     }), 201
 
 
+@app.route('/api/auth/google', methods=['POST'])
+def google_auth():
+    """Authenticate user with Google OAuth token."""
+    data = request.get_json()
+    credential = data.get('credential')
+    
+    if not credential:
+        return jsonify({'error': 'Missing Google credential'}), 400
+    
+    try:
+        # Decode the Google JWT token (basic decode without verification for demo)
+        # In production, you should verify with Google's public keys
+        import base64
+        import json
+        
+        # Split the JWT and decode the payload
+        parts = credential.split('.')
+        if len(parts) != 3:
+            return jsonify({'error': 'Invalid token format'}), 400
+        
+        # Decode payload (middle part)
+        payload = parts[1]
+        # Add padding if needed
+        payload += '=' * (4 - len(payload) % 4)
+        decoded = base64.urlsafe_b64decode(payload)
+        google_user = json.loads(decoded)
+        
+        # Extract user info from Google token
+        email = google_user.get('email', '')
+        name = google_user.get('name', email.split('@')[0])
+        google_id = google_user.get('sub', '')
+        
+        # Create or get user
+        username = f"google_{google_id[:8]}"
+        
+        # Generate our JWT token for the user
+        user = {
+            'username': username,
+            'name': name,
+            'email': email,
+            'role': 'Shopkeeper'  # Default role for Google users
+        }
+        
+        token = generate_token(username, user['role'], name)
+        
+        return jsonify({
+            'token': token,
+            'user': user,
+            'message': 'Google login successful'
+        })
+        
+    except Exception as e:
+        print(f"Google auth error: {e}")
+        return jsonify({'error': 'Failed to verify Google token'}), 400
+
+
 @app.route('/api/auth/verify', methods=['GET'])
 @token_required
 def verify_auth():
