@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function Dashboard({ festival }) {
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -15,7 +18,7 @@ function Dashboard({ festival }) {
         setLoading(true)
         setError(null)
         try {
-            const response = await fetch(`/api/dashboard/stats?festival=${festival}`)
+            const response = await fetch(`${API_BASE_URL}/api/dashboard/stats?festival=${festival}`)
             const data = await response.json()
             setStats(data)
         } catch (err) {
@@ -48,7 +51,7 @@ function Dashboard({ festival }) {
     }
 
     const handleGenerateReport = () => {
-        window.open(`/api/export/action-plan/${festival}`, '_blank')
+        window.open(`${API_BASE_URL}/api/export/action-plan/${festival}`, '_blank')
         setActionMessage('Municipality report is being downloaded...')
         setTimeout(() => setActionMessage(null), 3000)
     }
@@ -63,7 +66,7 @@ function Dashboard({ festival }) {
     }
 
     const handleExportActionPlan = () => {
-        window.open(`/api/export/hotspots/${festival}/csv`, '_blank')
+        window.open(`${API_BASE_URL}/api/export/hotspots/${festival}/csv`, '_blank')
         setActionMessage('Action plan CSV is being downloaded...')
         setTimeout(() => setActionMessage(null), 3000)
     }
