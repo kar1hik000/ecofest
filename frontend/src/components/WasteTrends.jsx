@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function WasteTrends({ festival }) {
     const [trends, setTrends] = useState([])
     const [loading, setLoading] = useState(true)
@@ -13,7 +16,7 @@ function WasteTrends({ festival }) {
     const fetchTrends = async () => {
         setLoading(true)
         try {
-            const response = await fetch(`/api/trends/${festival}`)
+            const response = await fetch(`${API_BASE_URL}/api/trends/${festival}`)
             const data = await response.json()
             setTrends(data.trends || [])
             if (data.areas) {

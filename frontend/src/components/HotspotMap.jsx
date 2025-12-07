@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 // Bangalore area coordinates - ALL 27 areas with well-spaced positions
 const AREA_COORDINATES = {
     // Central Bangalore
@@ -185,8 +188,8 @@ function HotspotMap({ festival }) {
         setMapReady(false)
         try {
             const [hotspotsRes, summaryRes] = await Promise.all([
-                fetch(`/api/hotspots/${festival}`),
-                fetch(`/api/hotspots/${festival}/summary`)
+                fetch(`${API_BASE_URL}/api/hotspots/${festival}`),
+                fetch(`${API_BASE_URL}/api/hotspots/${festival}/summary`)
             ])
             const hotspotsData = await hotspotsRes.json()
             const summaryData = await summaryRes.json()
@@ -206,7 +209,7 @@ function HotspotMap({ festival }) {
     const getAIInsights = async () => {
         setLoadingInsights(true)
         try {
-            const response = await fetch(`/api/hotspots/${festival}/insights`)
+            const response = await fetch(`${API_BASE_URL}/api/hotspots/${festival}/insights`)
             const data = await response.json()
             setInsights(data)
         } catch (error) {
@@ -222,8 +225,8 @@ function HotspotMap({ festival }) {
         setLoadingInsights(false)
     }
 
-    const downloadActionPlan = () => window.open(`/api/export/action-plan/${festival}`, '_blank')
-    const downloadCSV = () => window.open(`/api/export/hotspots/${festival}/csv`, '_blank')
+    const downloadActionPlan = () => window.open(`${API_BASE_URL}/api/export/action-plan/${festival}`, '_blank')
+    const downloadCSV = () => window.open(`${API_BASE_URL}/api/export/hotspots/${festival}/csv`, '_blank')
 
     const getPriorityClass = (priority) => {
         switch (priority) {

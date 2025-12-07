@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function FestivalComparison() {
     const [data, setData] = useState([])
     const [loading, setLoading] = useState(true)
@@ -12,7 +15,7 @@ function FestivalComparison() {
     const fetchComparisonData = async () => {
         setLoading(true)
         try {
-            const response = await fetch('/api/festivals/comparison')
+            const response = await fetch(`${API_BASE_URL}/api/festivals/comparison`)
             const result = await response.json()
             setData(result.festivals || [])
         } catch (error) {

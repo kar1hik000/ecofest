@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+// API Base URL - uses env variable in production
+const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+
 function EcoLeaderboard({ festival }) {
     const [shops, setShops] = useState([])
     const [loading, setLoading] = useState(true)
@@ -12,7 +15,7 @@ function EcoLeaderboard({ festival }) {
     const fetchLeaderboard = async () => {
         setLoading(true)
         try {
-            const response = await fetch(`/api/leaderboard/${festival}`)
+            const response = await fetch(`${API_BASE_URL}/api/leaderboard/${festival}`)
             const data = await response.json()
             setShops(data.shops || [])
         } catch (error) {
